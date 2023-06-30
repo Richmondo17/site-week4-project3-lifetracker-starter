@@ -2,10 +2,14 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 
+const pool = require("../db/pool");
+
 //registration route
 router.post("/register", async (req, res) =>{
-const { email, username, firstName, lastName, password } = req.body
+const { email, username, firstName, lastName, password } = req.body;
+console.log(password)
 
+//to encrypt the password
     try {
         //take the users email, username, firstname, lastname, password, and confrmed password
         //and creates a new user in our database
@@ -27,12 +31,15 @@ const { email, username, firstName, lastName, password } = req.body
         const values = [email, username, firstName, lastName, hashedPassword];
         const result = await pool.query(createUserQuery, values);
 
-        } catch (error) {
         //if all this works and no error - Status code 201 - successful entry
-            res.status(201).json({
-            message: "User registered successfully",
-            user: result.rows[0],
-            });
+        res.status(201).json({
+        message: "User registered successfully",
+        user: result.rows[0],
+        });
+
+        } catch (error) {
+            console.error("Error registering user: ", error);
+            res.status(500).json({ message: "Error registering user" });
         }
     });
 
@@ -66,17 +73,17 @@ router.post("/login", async (req, res) => {
           }
 
         //Generate and sign JWT token, store secret-key in .env
-        const token = jwt.sign({ userId: user.id }, "secret-key-unique", {
-        expiresIn: "1h",
-      });
+    //     const token = jwt.sign({ userId: user.id }, "secret-key-unique", {
+    //     expiresIn: "1h",
+    //   });
 
             res.status(200).json({
             message: "Login Successful",
             token: token,
             user: {
                 id: user.id,
-                name: user.name,
                 email: user.email,
+                username: user.username
             },
             });
       
