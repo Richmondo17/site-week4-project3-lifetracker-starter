@@ -1,12 +1,23 @@
 import React, { useState } from "react";
-import RegistrationForm from "../RegistrationForm/RegistrationForm"
-import './App.css'
-import "../Home/Home"
+import LoginForm from "../LoginForm/LoginForm";
+import RegistrationForm from "../RegistrationForm/RegistrationForm";
+import Navbar from "../Navbar/Navbar";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import './App.css';
+import Home from "../Home/Home";
+import ExercisePage from '../ExercisePage/ExercisePage';
+import ExerciseCreatePage from '../ExerciseCreatePage/ExerciseCreatePage';
+
 
 function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState("");
+  
+
+  const [loginFormVisible, setLoginFormVisible] = useState(false);
+  const [registrationFormVisible, setRegistrationFormVisible] = useState(false);
+
 
   const handleLogin = async (email, password) => {
     try {
@@ -30,20 +41,21 @@ function App() {
         setLoginError(data.message);
         console.log(data.message); //optional - display error message
       }
+
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   //Registration function to handle registration
-  const handleRegistration = async (email, firstName, lastName, username, password) => {
+  const handleRegistration = async (email, username, firstName, lastName, password) => {
     try {
       const response = await fetch("http://localhost:3001/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, firstName, lastName, username, password }),
+        body: JSON.stringify({ email, username, firstName, lastName, password }),
       });
 
       //wait for the response
@@ -62,26 +74,58 @@ function App() {
     }
   };
 
+  // const handleLoginClick = () => {
+  //   // Set state to show LoginForm
+  //   setLoginFormVisible(true);
+  //   setRegistrationFormVisible(false);
+
+  // };
+
+  // const handleRegisterClick = () => {
+  //   // Set state to show RegistrationForm
+  //   setLoginFormVisible(false);
+  //   setRegistrationFormVisible(true);
+
+  // };
+  
   const handleLogout = () => {
     setLoggedIn(false);
+    <h1>HELLO</h1>
   };
 
+  console.log(handleLogout)
+
   return (
-    <div>
-      {loggedIn ? (
-        <>
-          <h1>Welcome! You are logged in!!</h1>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <div>
-          <h2>Welcome! </h2>
-          {/* <LoginForm onLogin={handleLogin} error={loginError} /> */}
-          <RegistrationForm onRegister={handleRegistration} />
-        </div>
-      )}
-    </div>
-  )
-}
+    <Router>
+      <div>
+        <Link to="/">Home</Link>
+        <Navbar onLogin={handleLogin} error={loginError} loggedIn={loggedIn} onLogout={handleLogout}/>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route
+            path="/login"
+            element={<LoginForm onLogin={handleLogin} error={loginError}/>}
+          />
+
+          <Route
+            path="/register"
+            element={<RegistrationForm onRegister={handleRegistration} />}
+          />
+
+          <Route
+            path="/logout"
+            element={<Home onLogout={handleLogout} />}
+          />
+
+          <Route path="/exercise" element={<ExercisePage />} />
+
+          <Route path="/exercise/create" element={<ExerciseCreatePage/>}/>
+        </Routes>
+      </div>
+    </Router>
+  );
+};
 
 export default App

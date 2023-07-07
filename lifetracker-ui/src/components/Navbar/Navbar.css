@@ -1,15 +1,19 @@
 .navbar {
-  background-color: #333;
+  background-color: #ca0909;
   color: #fff;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   padding: 10px;
+  border-radius: 25px;
 }
 
 .navy {
   list-style-type: none;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  font-size:xx-large;
   margin: 0;
   padding: 0;
 }
@@ -27,3 +31,19 @@ a {
 a:hover {
   color: #ffcc00;
 }
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.login-button,
+.register-button {
+  padding: 20px 50px;
+  background-color: #ffffff;
+  border:wheat;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+

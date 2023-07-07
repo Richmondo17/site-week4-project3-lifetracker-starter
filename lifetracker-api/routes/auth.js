@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const pool = require("../db/pool");
 
@@ -26,6 +27,8 @@ console.log(password)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             `;
+
+        console.log(email)
 
         //$1 will get email, $2 will get username, $3 firstName, $4 lastname, $5 will be hashedPassword
         const values = [email, username, firstName, lastName, hashedPassword];
@@ -72,10 +75,9 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid password" });
           }
 
-        //Generate and sign JWT token, store secret-key in .env
-    //     const token = jwt.sign({ userId: user.id }, "secret-key-unique", {
-    //     expiresIn: "1h",
-    //   });
+          const token = jwt.sign({ userId: user.id }, "secret-key-unique", {
+            expiresIn: "1h",
+          });
 
             res.status(200).json({
             message: "Login Successful",
@@ -83,7 +85,7 @@ router.post("/login", async (req, res) => {
             user: {
                 id: user.id,
                 email: user.email,
-                username: user.username
+                password: user.password
             },
             });
       

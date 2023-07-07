@@ -10,6 +10,31 @@ CREATE TABLE IF NOT EXISTS users(
         lastName VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL
     );
+
+
+CREATE TABLE IF NOT EXISTS exercise(
+       id SERIAL PRIMARY KEY,
+       workoutName VARCHAR(255) NOT NULL,
+       category VARCHAR(255) NOT NULL,
+       duration VARCHAR(255) NOT NULL,
+       intensity VARCHAR(255) NOT NULL
+  );
+
+
+CREATE TABLE IF NOT EXISTS nutrition(
+      id SERIAL PRIMARY KEY,
+      foodName VARCHAR(255) NOT NULL,
+      category VARCHAR(255) NOT NULL,
+      quantity VARCHAR(255) NOT NULL,
+      calories VARCHAR(255) NOT NULL,
+      url VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS sleep(
+     id SERIAL PRIMARY KEY
+);
+  
 `;
 
 //DB information to connect

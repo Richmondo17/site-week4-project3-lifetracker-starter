@@ -66,7 +66,7 @@ const RegistrationForm = ({ onRegister }) => {
         </>
       );
 
-}
+};
 
     
 export default RegistrationForm;
