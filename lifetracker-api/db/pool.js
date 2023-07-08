@@ -9,18 +9,19 @@ CREATE TABLE IF NOT EXISTS users(
         firstName VARCHAR(255) NOT NULL,
         lastName VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL
-    );
+    );`
 
-
+const sqlExercise =  `
 CREATE TABLE IF NOT EXISTS exercise(
-       id SERIAL PRIMARY KEY,
        workoutName VARCHAR(255) NOT NULL,
        category VARCHAR(255) NOT NULL,
        duration VARCHAR(255) NOT NULL,
-       intensity VARCHAR(255) NOT NULL
-  );
+       intensity VARCHAR(255) NOT NULL,
+       id INTEGER NOT NULL,
+       FOREIGN KEY (id) REFERENCES users(id)
+  );`
 
-
+const sqlNutrition = `
 CREATE TABLE IF NOT EXISTS nutrition(
       id SERIAL PRIMARY KEY,
       foodName VARCHAR(255) NOT NULL,
@@ -29,13 +30,12 @@ CREATE TABLE IF NOT EXISTS nutrition(
       calories VARCHAR(255) NOT NULL,
       url VARCHAR(255) NOT NULL
 );
+`
 
-
-CREATE TABLE IF NOT EXISTS sleep(
-     id SERIAL PRIMARY KEY
-);
+// CREATE TABLE IF NOT EXISTS sleep(
+//      id SERIAL PRIMARY KEY
+// );
   
-`;
 
 //DB information to connect
 const pool = new Pool({

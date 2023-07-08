@@ -9,6 +9,8 @@ const LoginForm = ({ onLogin, error, onLogout }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+
         onLogin(email, password);
       };
 

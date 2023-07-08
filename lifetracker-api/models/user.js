@@ -7,8 +7,6 @@ const { BCRYPT_WORK_FACTOR } = require("../config")
 
 class User {
     
-    
-    
     static _createPublicUser(user) {
         return {
           email: user.email,

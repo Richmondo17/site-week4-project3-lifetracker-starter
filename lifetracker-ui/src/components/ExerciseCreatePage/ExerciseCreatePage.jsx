@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ExerciseCreatePage.css";
+import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
 
-const ExerciseCreatePage = () => {
+const ExerciseCreatePage = ({id}) => {
   const [workoutName, setWorkoutName] = useState("");
   const [category, setCategory] = useState("");
   const [duration, setDuration] = useState("");
   const [intensity, setIntensity] = useState("");
 
+  const [exerciseData, setExerciseData] = useState(null);
+
+  console.log('id is', id)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await handleExercise(workoutName, category, duration, intensity);
+      await handleExercise(workoutName, category, duration, intensity, id);
+      setExerciseData()
       // Handle successful submission or any additional logic
     } catch (error) {
       // Handle error case if needed
@@ -18,15 +23,17 @@ const ExerciseCreatePage = () => {
     }
   };
 
-  const handleExercise = async (workoutName, category, duration, intensity) => {
+  const handleExercise = async (workoutName, category, duration, intensity, id) => {
+    console.log(id)
     try {
       const response = await fetch("http://localhost:3001/exercise/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ workoutName, category, duration, intensity }),
+        body: JSON.stringify({ workoutName, category, duration, intensity, id}),
       });
+      
 
       const data = await response.json();
 
@@ -40,10 +47,27 @@ const ExerciseCreatePage = () => {
     } catch (error) {
       console.error("Error:", error);
       // Handle error case if needed
+      console.log(user.id)
     }
   };
 
+  useEffect(() => {
+    const fetchExercise = async () => {
+      try {
+        console.log("this is the id", id)
+        const response = await fetch(`http://localhost:3001/exercise/${id}`);
+        const data = await response.json();
+        setExerciseData(data);
+      } catch (error) {
+        console.error("Error retrieving exercise:", error);
+      }
+    };
+
+    fetchExercise();
+  }, [exerciseData]);
+
   return (
+    <>
     <form onSubmit={handleSubmit}>
       <h3>Record Exercise</h3>
       <label>Workout Name: </label>
@@ -88,6 +112,16 @@ const ExerciseCreatePage = () => {
       />
       <button type="submit">Save</button>
     </form>
+
+    {Array.isArray(exerciseData) ? (
+        exerciseData.map((exercise, index) => (
+          <ExerciseDetails exercise={exercise} key={index} />
+        ))
+      ) : (
+        <p>Loading exercise data...</p>
+      )}
+    </>
+
   );
 };
 

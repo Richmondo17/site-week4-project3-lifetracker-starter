@@ -34,10 +34,18 @@ console.log(password)
         const values = [email, username, firstName, lastName, hashedPassword];
         const result = await pool.query(createUserQuery, values);
 
+
+        //Generate and sign JWT token , stroe secret key in .env
+        const token = jwt.sign({ userId: result.rows[0].id, username: result.rows[0].username }, "secret-key-unique", {
+            expiresIn: "1h",
+          });
+
+
         //if all this works and no error - Status code 201 - successful entry
         res.status(201).json({
         message: "User registered successfully",
         user: result.rows[0],
+        token: token,
         });
 
         } catch (error) {
@@ -75,7 +83,7 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid password" });
           }
 
-          const token = jwt.sign({ userId: user.id }, "secret-key-unique", {
+          const token = jwt.sign({ userId: user.id, userName: result.rows[0].username}, "secret-key-unique", {
             expiresIn: "1h",
           });
 

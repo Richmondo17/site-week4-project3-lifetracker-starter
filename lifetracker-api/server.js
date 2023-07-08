@@ -5,7 +5,7 @@ const morgan = require("morgan"); // Import the Morgan middleware for logging
 
 //importing the routes
 const authRoutes = require("./routes/auth");
-const exerciseRoutes = require("./routes/exercise")
+const exerciseRoutes = require("./routes/exercise");
 
 // Middleware
 app.use(cors()); // Enable CORS middleware to handle cross-origin requests
@@ -16,7 +16,10 @@ app.use(express.json()); // Parse incoming requests with JSON payloads
 app.use("/api/auth", authRoutes);
 
 //
+app.use("/api/exercises", exerciseRoutes);
+
 app.use("/exercise/create", exerciseRoutes);
+
 // Start the server
 const PORT = 3001;
 //enabling the localhost at PORT - 3001

@@ -1,23 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginForm from "../LoginForm/LoginForm";
 import RegistrationForm from "../RegistrationForm/RegistrationForm";
 import Navbar from "../Navbar/Navbar";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
 import './App.css';
 import Home from "../Home/Home";
 import ExercisePage from '../ExercisePage/ExercisePage';
 import ExerciseCreatePage from '../ExerciseCreatePage/ExerciseCreatePage';
+import jwtDecode from "jwt-decode"
+import axios from "axios"
 
 
 function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [userName, setUserName] = useState();
+  const [id, setID] = useState();
+
+console.log("app", id)
+  useEffect(() => {
+    const checkLoggedIn = () =>{
+      //check if the user is logged in when the user first accesses the webpage
+      const token = localStorage.getItem("token");
+      if(token){
+        //decode the stored token
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.userName);
+
+
+        if(decodedToken.exp * 1000 > Date.now()){
+          setLoggedIn(true);
+        } else{
+          //Token has expired
+          handleLogout();
+        }
+      }
+    }
   
-
-  const [loginFormVisible, setLoginFormVisible] = useState(false);
-  const [registrationFormVisible, setRegistrationFormVisible] = useState(false);
-
+    checkLoggedIn();
+  }, [])
 
   const handleLogin = async (email, password) => {
     try {
@@ -27,15 +49,30 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        
       });
+      console.log(response)
 
       const data = await response.json();
+      
+      let id = localStorage.getItem("id");
+      console.log("this is the is", id)
+      setID(id)
+      if (response.status === 200) {
 
-      if (response.ok) {
+        const {token} = data;
+        localStorage.setItem("token", token);
+
         //Successful Login
         setLoggedIn(true);
         setLoginError("");
         console.log(data.message); //optional - display a success message
+        console.log(data.user.username) //another way to get username
+        
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.userName);
+      
+
       } else {
         //Login failed
         setLoginError(data.message);
@@ -61,10 +98,19 @@ function App() {
       //wait for the response
       const data = await response.json();
 
-      if (response.ok) {
+
+      if (response.status === 201) {
+          //get the token into and store in localStorage
+        const {token} = response.data;
+        localStorage.setItem("token", token);
+
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.userName);
+        
         //Registration successful
         setLoggedIn(true);
         console.log(data.message); //optional - display a success message
+        
       } else {
         //Registration failed
         console.log(data.message); //optional - display error meesage
@@ -73,24 +119,11 @@ function App() {
       console.error("Error: ", error);
     }
   };
-
-  // const handleLoginClick = () => {
-  //   // Set state to show LoginForm
-  //   setLoginFormVisible(true);
-  //   setRegistrationFormVisible(false);
-
-  // };
-
-  // const handleRegisterClick = () => {
-  //   // Set state to show RegistrationForm
-  //   setLoginFormVisible(false);
-  //   setRegistrationFormVisible(true);
-
-  // };
   
   const handleLogout = () => {
+    localStorage.removeItem("token");
     setLoggedIn(false);
-    <h1>HELLO</h1>
+    Navigate("/");
   };
 
   console.log(handleLogout)
@@ -98,7 +131,12 @@ function App() {
   return (
     <Router>
       <div>
+        {loggedIn &&( 
+          <>
+        <h1>Welcome {userName}</h1>
         <Link to="/">Home</Link>
+        </>
+        )}
         <Navbar onLogin={handleLogin} error={loginError} loggedIn={loggedIn} onLogout={handleLogout}/>
 
         <Routes>
@@ -114,14 +152,9 @@ function App() {
             element={<RegistrationForm onRegister={handleRegistration} />}
           />
 
-          <Route
-            path="/logout"
-            element={<Home onLogout={handleLogout} />}
-          />
-
           <Route path="/exercise" element={<ExercisePage />} />
 
-          <Route path="/exercise/create" element={<ExerciseCreatePage/>}/>
+          <Route path="/exercise/create" element={<ExerciseCreatePage  id = {id} />}/>
         </Routes>
       </div>
     </Router>
