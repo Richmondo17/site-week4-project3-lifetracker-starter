@@ -27,7 +27,7 @@ const ExerciseCreatePage = ({id}) => {
   const handleExercise = async (workoutName, category, duration, intensity, id) => {
     console.log(id)
     try {
-      const response = await fetch("http://localhost:3001/exercise/create", {
+      const response = await fetch("https://lifetracker-api-falo.onrender.com/exercise/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const ExerciseCreatePage = ({id}) => {
   };
 
   useEffect(() => {
-        axios.get(`http://localhost:3001/exercise/${id}`)
+        axios.get(`https://lifetracker-api-falo.onrender.com/exercise/${id}`)
         .then((response) => {
            console.log("RES DATA:", response)
           setExerciseData(response.data.exercise)
