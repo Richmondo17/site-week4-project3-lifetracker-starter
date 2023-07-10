@@ -113,13 +113,14 @@ const ExerciseCreatePage = ({id}) => {
       <button type="submit">Save</button>
     </form>
 
-    {Array.isArray(exerciseData) ? (
-        exerciseData.map((exercise, index) => (
-          <ExerciseDetails exercise={exercise} key={index} />
-        ))
-      ) : (
-        <p>Loading exercise data...</p>
-      )}
+    {exerciseData ? (
+  exerciseData.map((exercise, index) => (
+    <ExerciseDetails exercise={exercise} key={index} />
+  ))
+) : (
+  <p>Loading exercise data...</p>
+)}
+
     </>
 
   );

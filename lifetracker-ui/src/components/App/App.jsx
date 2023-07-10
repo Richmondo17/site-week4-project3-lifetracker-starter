@@ -101,7 +101,8 @@ console.log("app", id)
 
       if (response.status === 201) {
           //get the token into and store in localStorage
-        const {token} = response.data;
+        const {token} = data;
+       
         localStorage.setItem("token", token);
 
         const decodedToken = jwtDecode(token);

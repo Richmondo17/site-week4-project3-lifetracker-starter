@@ -36,7 +36,7 @@ console.log(password)
 
 
         //Generate and sign JWT token , stroe secret key in .env
-        const token = jwt.sign({ userId: result.rows[0].id, username: result.rows[0].username }, "secret-key-unique", {
+        const token = jwt.sign({ userId: result.rows[0].id, userName: result.rows[0].username }, "secret-key-unique", {
             expiresIn: "1h",
           });
 
