@@ -39,11 +39,11 @@ CREATE TABLE IF NOT EXISTS nutrition(
 
 //DB information to connect
 const pool = new Pool({
-  user: "postgres",
-  password: "postgres",
-  host: "localhost",
+  user: "lifetracker_pgs_user",
+  password: "xyQ6ks7kko6m9HEtH7yWo0vdqZaz156k",
+  host: "dpg-cim98benqqldjqiuhjq0-a",
   port: 5432,
-  database: "registration_login",
+  database: "lifetracker_pgs",
 });
 
 //Execute the SQL script
