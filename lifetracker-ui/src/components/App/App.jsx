@@ -9,6 +9,7 @@ import ExercisePage from '../ExercisePage/ExercisePage';
 import ExerciseCreatePage from '../ExerciseCreatePage/ExerciseCreatePage';
 import jwtDecode from "jwt-decode"
 import axios from "axios"
+import ActivityPage from "../ActivityPage/ActivityPage";
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
   const [id, setID] = useState();
 
 console.log("app", id)
+
+console.log(id)
   useEffect(() => {
     const checkLoggedIn = () =>{
       //check if the user is logged in when the user first accesses the webpage
@@ -27,7 +30,7 @@ console.log("app", id)
         //decode the stored token
         const decodedToken = jwtDecode(token);
         setUserName(decodedToken.userName);
-
+        setID(decodedToken.userId)
 
         if(decodedToken.exp * 1000 > Date.now()){
           setLoggedIn(true);
@@ -54,15 +57,16 @@ console.log("app", id)
       console.log(response)
 
       const data = await response.json();
-      
-      let id = localStorage.getItem("id");
-      console.log("this is the is", id)
-      setID(id)
+      console.log("DATA:", data.user)
+      console.log("this is the is",data.user.id)
+      // console.log("DATA USER:". data.user); 
+      setID(data.user.id)
       if (response.status === 200) {
 
         const {token} = data;
         localStorage.setItem("token", token);
 
+      
         //Successful Login
         setLoggedIn(true);
         setLoginError("");
@@ -106,7 +110,9 @@ console.log("app", id)
         localStorage.setItem("token", token);
 
         const decodedToken = jwtDecode(token);
+        console.log("DECODED IN REG:", decodedToken); 
         setUserName(decodedToken.userName);
+        setID(decodedToken.userId); 
         
         //Registration successful
         setLoggedIn(true);
@@ -153,7 +159,11 @@ console.log("app", id)
             element={<RegistrationForm onRegister={handleRegistration} />}
           />
 
-          <Route path="/exercise" element={<ExercisePage />} />
+          <Route
+            path="/activity"
+            element={<ActivityPage />}/>
+
+          <Route path="/exercise" element={<ExercisePage id={id} />} />
 
           <Route path="/exercise/create" element={<ExerciseCreatePage  id = {id} />}/>
         </Routes>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./ExerciseCreatePage.css";
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
+import axios from "axios"; 
 
 const ExerciseCreatePage = ({id}) => {
   const [workoutName, setWorkoutName] = useState("");
@@ -8,7 +9,7 @@ const ExerciseCreatePage = ({id}) => {
   const [duration, setDuration] = useState("");
   const [intensity, setIntensity] = useState("");
 
-  const [exerciseData, setExerciseData] = useState(null);
+  const [exerciseData, setExerciseData] = useState([]);
 
   console.log('id is', id)
   const handleSubmit = async (e) => {
@@ -47,24 +48,21 @@ const ExerciseCreatePage = ({id}) => {
     } catch (error) {
       console.error("Error:", error);
       // Handle error case if needed
-      console.log(user.id)
+      console.log("user id", user.id)
     }
   };
 
   useEffect(() => {
-    const fetchExercise = async () => {
-      try {
-        console.log("this is the id", id)
-        const response = await fetch(`http://localhost:3001/exercise/${id}`);
-        const data = await response.json();
-        setExerciseData(data);
-      } catch (error) {
-        console.error("Error retrieving exercise:", error);
-      }
-    };
-
-    fetchExercise();
-  }, [exerciseData]);
+        axios.get(`http://localhost:3001/exercise/${id}`)
+        .then((response) => {
+           console.log("RES DATA:", response)
+          setExerciseData(response.data.exercise)
+          console.log("EXERDATA:", exerciseData); 
+        })
+        .catch((error) => {
+          console.log("error:", error)
+        })
+  }, []);
 
   return (
     <>
@@ -111,9 +109,9 @@ const ExerciseCreatePage = ({id}) => {
         required
       />
       <button type="submit">Save</button>
-    </form>
+    </form>ˇ
 
-    {exerciseData ? (
+    {exerciseData && exerciseData.length > 0 ? (
   exerciseData.map((exercise, index) => (
     <ExerciseDetails exercise={exercise} key={index} />
   ))

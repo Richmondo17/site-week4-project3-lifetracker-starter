@@ -8,7 +8,7 @@ const pool = require("../db/pool");
 //registration route
 router.post("/register", async (req, res) =>{
 const { email, username, firstName, lastName, password } = req.body;
-console.log(password)
+console.log(req.body)
 
 //to encrypt the password
     try {

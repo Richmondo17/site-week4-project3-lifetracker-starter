@@ -16,9 +16,9 @@ app.use(express.json()); // Parse incoming requests with JSON payloads
 app.use("/api/auth", authRoutes);
 
 //
-app.use("/api/exercises", exerciseRoutes);
+app.use("/exercise", exerciseRoutes);
 
-app.use("/exercise/create", exerciseRoutes);
+// app.use("/exercise/create", exerciseRoutes);
 
 // Start the server
 const PORT = 3001;

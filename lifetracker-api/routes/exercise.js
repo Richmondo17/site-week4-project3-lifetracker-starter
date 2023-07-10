@@ -5,8 +5,22 @@ const jwt = require("jsonwebtoken");
 
 const pool = require("../db/pool");
 
-router.post("/exerciseData", async (req, res) => {
+router.get("/:id", async (req, res) => {
+    console.log("REQ BODY:", req.params)
     const id = req.body;
+    const userEmail = req.body.email
+    console.log("USER EMAIL:", userEmail); 
+    console.log("ID IN BACKEND:", id); 
+
+    const findUserIDQuery = `
+    SELECT id FROM users
+    WHERE email = $1 `;
+
+
+    const userIDRes = await pool.query(findUserIDQuery, [userEmail])
+    const userID =userIDRes.rows[0]; 
+
+
     const exerciseId = req.params.id;
     try {
       const getExerciseQuery = `
@@ -15,10 +29,12 @@ router.post("/exerciseData", async (req, res) => {
         WHERE id = $1
       `;
       
-      const result = await pool.query(getExerciseQuery, [id]);
+      console.log("userID:", userID)
+      const result = await pool.query(getExerciseQuery, [req.params.id]);
+      console.log("IM HERE")
       const exercise = result.rows;
   
-      res.status(200).json(exercise);
+      res.status(200).json({exercise});
       console.log(exercise)
     } catch (error) {
       console.error("Error retrieving exercise:", error);
@@ -26,7 +42,7 @@ router.post("/exerciseData", async (req, res) => {
     }
   });
   
-router.post("/", async (req, res) =>{
+router.post("/create", async (req, res) =>{
     const { workoutName, category, duration, intensity, id} = req.body;
     console.log(workoutName)
     console.log('this is the id:', id)
