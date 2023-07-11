@@ -23,16 +23,14 @@ By the end of this project you will be able to...
 
 ### Core Features
 
-gif: <a href="https://www.loom.com/share/c22c4c56b46c4ec7ac37d33f3ff0b893">
+<a href="https://www.loom.com/share/42d94bbbc90c405884f126c7a8484cc0">
+    <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/42d94bbbc90c405884f126c7a8484cc0-with-play.gif">
+</a>
 
 <div>
-
 https://lifetracker-frontend-5hbb.onrender.com/
-
 </div>
 
-    <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/c22c4c56b46c4ec7ac37d33f3ff0b893-with-play.gif">
-  </a>
 
 - [X] **The Landing Page:** Display a large hero image and a brief blurb on what this application is about. *Note:* This is the only page that unauthenticated users should be able to view.
 - [X] **Login Page:** A form that allows users to login with email and password.
