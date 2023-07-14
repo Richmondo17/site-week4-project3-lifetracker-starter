@@ -12,6 +12,13 @@ import axios from "axios"
 import ActivityPage from "../ActivityPage/ActivityPage";
 
 
+
+/* 
+The component uses a series of useState hooks 
+to manage the state of variables such as loggedIn, 
+loginError, userName, and id. It also uses the useEffect 
+hook to perform some actions when the component mounts.
+*/
 function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
@@ -43,6 +50,13 @@ console.log(id)
   
     checkLoggedIn();
   }, [])
+
+  /*
+  The handleLogin function is an asynchronous 
+  function that sends a login request to a remote API endpoint. 
+  It handles the response and updates the state accordingly. 
+  Similarly, the handleRegistration function handles user registration.
+  */
 
   const handleLogin = async (email, password) => {
     try {
@@ -127,6 +141,10 @@ console.log(id)
     }
   };
   
+  /*   
+  The handleLogout function removes the authentication 
+  token from local storage and updates the state to log the user out.
+  */
   const handleLogout = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);

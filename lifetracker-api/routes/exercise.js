@@ -5,23 +5,38 @@ const jwt = require("jsonwebtoken");
 
 const pool = require("../db/pool");
 
-router.get("/:id", async (req, res) => {
-    console.log("REQ BODY:", req.params)
-    const id = req.body;
-    const userEmail = req.body.email
-    console.log("USER EMAIL:", userEmail); 
-    console.log("ID IN BACKEND:", id); 
 
+//GET request to retrieve a user by their ID
+router.get("/:id", async (req, res) => {
+    const id = req.body; // assigning the value of req.body to the variable id
+    const userEmail = req.body.email // assigning the value of req.body to the variable userEmail
+
+    // SQL query 
     const findUserIDQuery = `
     SELECT id FROM users
     WHERE email = $1 `;
 
 
-    const userIDRes = await pool.query(findUserIDQuery, [userEmail])
+    /*
+    SQL query string findUserIDQuery that selects 
+    the id from the users table where the email matches 
+    the value provided as a parameter.
+    */
+
+    const userIDRes = await pool.query(findUserIDQuery, [userEmail]) //executing the query
     const userID =userIDRes.rows[0]; 
 
 
-    const exerciseId = req.params.id;
+
+    const exerciseId = req.params.id; // assigning the value of req.params.id to the variable exerciseId
+
+    
+    /*
+    SQL query string getExerciseQuery 
+    that selects all columns from the exercise 
+    table where the id matches the value provided as a parameter.
+    */
+
     try {
       const getExerciseQuery = `
         SELECT *
@@ -29,19 +44,20 @@ router.get("/:id", async (req, res) => {
         WHERE id = $1
       `;
       
-      console.log("userID:", userID)
+      /*
+      Executes the SQL query using pool.query and passes the value of req.params.id as a parameter.
+      */
       const result = await pool.query(getExerciseQuery, [req.params.id]);
-      console.log("IM HERE")
       const exercise = result.rows;
-  
-      res.status(200).json({exercise});
-      console.log(exercise)
+      res.status(200).json({exercise}); // assigning the rows property of result to the variable exercise.
     } catch (error) {
       console.error("Error retrieving exercise:", error);
       res.status(500).json({ message: "Error retrieving exercise" });
     }
   });
-  
+
+
+ //POST request to create a new exercise 
 router.post("/create", async (req, res) =>{
     const { workoutName, category, duration, intensity, id} = req.body;
     console.log(workoutName)
@@ -53,8 +69,10 @@ router.post("/create", async (req, res) =>{
         RETURNING *
         `;
 
-        const values = [workoutName, category, Number(duration), Number(intensity), Number(id)];
+        //$1 will get workoutName, $2 will get category, $3 will get duration, $4 will get intensity, $5 will be id
+        const values = [workoutName, category, Number(duration), Number(intensity), Number(id)]; 
         
+        //
         const result = await pool.query(createUserQuery, values);
         
         res.status(201).json({

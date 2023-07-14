@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS nutrition(
 );
 `
 
+//If I had time I would create a table for sleep
 // CREATE TABLE IF NOT EXISTS sleep(
 //      id SERIAL PRIMARY KEY
 // );
